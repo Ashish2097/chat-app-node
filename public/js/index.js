@@ -2,7 +2,6 @@ let socket = io();    //initiating request from client to server to open web soc
 
 socket.on('connect', function() {    //event handler
   console.log("Connected to server");   //will appear in client console\
-
   socket.emit('createMessage', {
     from: "Ashu",
     text: "hello"
@@ -14,5 +13,5 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(message) {
-  console.log("newMessage", message);
+  console.log(message.text);
 });
