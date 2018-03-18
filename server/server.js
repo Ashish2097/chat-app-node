@@ -8,7 +8,7 @@ app.use(express.static(publicPath));
 
 app.listen('3000',(res, err)=>{
   if(!err)
-  console.log(`Listening at ${port}`);
+   console.log(`Listening at ${port}`);
   else
-  console.log("error" + err);
+   console.log("error" + err);
 });
