@@ -2,6 +2,29 @@
 
 let socket = io();    //initiating request from client to server to open web socket and is kept open
 
+function scrollToBottom() {
+  //selectors
+  let messages = jQuery('#messages');
+  let newMessage = messages.lastElementChild;
+  console.log(newMessage);
+  //height
+  let clientHeight = messages.clientHeight;
+  console.log(clientHeight);
+  let scrollTop = messages.scrollTop;
+  console.log(scrollTop);
+  let scrollHeight = messages.scrollHeight;
+  console.log(scrollHeight);
+  let newMessageHeight = newMessage.innerHeight();
+  console.log(newMessageHeight);
+  let lastMessageHeight = newMessage.prev().innerHeight();
+  console.log(lastMessageHeight);
+
+  if(clientHeight + scrollTop +newMessageHeight + lastMessageHeight >= scrollHeight) {
+    console.log('Should Scroll');
+  }
+};
+
+
 socket.on('connect', function() {    //event handler
   console.log("Connected to server");   //will appear in client console
 });
@@ -21,6 +44,7 @@ socket.on('newMessage', function(message) {
   });
   jQuery('#messages').append(html);
 
+  // scrollToBottom();
 
 
   //
@@ -40,9 +64,11 @@ socket.on('newLocationMessage', function(message) {
     createdAt: formattedTime,
     url: message.url
   });
+  console.log(html);
+  jQuery('#messages').append(html);
 
-  jQuery('#message').append(html);
-  // 
+  scrollToBottom();
+
   // let li = jQuery('<li></li>');
   // let a = jQuery('<a target="_blank">My Current Location</a>');
   //
@@ -57,7 +83,6 @@ jQuery('#message-form').on('submit', function (e){
   e.preventDefault();           //preventing default behaviour of reloading the page
 
   let messageTextbox = jQuery('[name=message]');
-
   socket.emit('createMessage', {
     from: "User",
     text: messageTextbox.val()
@@ -71,7 +96,6 @@ locationButton.on('click', function () {
   if(!navigator.geolocation){
     return alert('Geolocation not supported by your browser.');
   }
-
   locationButton.attr('disabled',"disabled").text('Sending location....');
 
   navigator.geolocation.getCurrentPosition(function (position){
