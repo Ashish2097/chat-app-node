@@ -40,13 +40,21 @@ io.on('connection', function(socket) {
   });
 
   socket.on('createMessage', function(message, callback) {
-    console.log("createMessage", message);
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    let user = users.getUser(socket.id);
+
+    if(user && isValidString(message.text)){
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
     callback();
   });
 
   socket.on('createLocationMessage', function (coords) {
-      io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+    let user = users.getUser(socket.id);
+
+    if(user){
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+    }
+
   });
 
   socket.on('disconnect', function() {
@@ -56,7 +64,7 @@ io.on('connection', function(socket) {
       io.to(user.room).emit('updateUserList',users.getUserList(user.room));
       io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
     }
-    
+
   });
 });
 
