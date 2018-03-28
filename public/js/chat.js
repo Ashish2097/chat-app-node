@@ -5,22 +5,22 @@ let socket = io();    //initiating request from client to server to open web soc
 function scrollToBottom() {
   //selectors
   let messages = jQuery('#messages');
-  let newMessage = messages.lastElementChild;
-  console.log(newMessage);
+  let newMessage = messages.children("li:last-child");
+  // console.log(newMessage);
   //height
-  let clientHeight = messages.clientHeight;
-  console.log(clientHeight);
-  let scrollTop = messages.scrollTop;
-  console.log(scrollTop);
-  let scrollHeight = messages.scrollHeight;
-  console.log(scrollHeight);
+  let clientHeight = messages.prop('clientHeight');
+  // console.log(clientHeight);
+  let scrollTop = messages.prop('scrollTop');
+  // console.log(scrollTop);
+  let scrollHeight = messages.prop('scrollHeight');
+  // console.log(scrollHeight);
   let newMessageHeight = newMessage.innerHeight();
-  console.log(newMessageHeight);
+  // console.log(newMessageHeight);
   let lastMessageHeight = newMessage.prev().innerHeight();
-  console.log(lastMessageHeight);
+  // console.log(lastMessageHeight);
 
   if(clientHeight + scrollTop +newMessageHeight + lastMessageHeight >= scrollHeight) {
-    console.log('Should Scroll');
+    messages.scrollTop(scrollHeight);
   }
 };
 
@@ -66,7 +66,7 @@ socket.on('newMessage', function(message) {
   });
   jQuery('#messages').append(html);
 
-  // scrollToBottom();
+  scrollToBottom();
 
 
   //
